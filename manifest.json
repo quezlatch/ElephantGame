@@ -1,0 +1,7 @@
+{
+  "name": "ElephantGame",
+  "short_name": "ElephantGame",
+  "description": "Gameified Elephant Carpaccio",
+  "start_url": "/",
+  "display": "standalone"
+}
