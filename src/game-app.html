@@ -1,4 +1,6 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="game-teams.html">
 
 <dom-module id="game-app">
   <template>
@@ -8,6 +10,10 @@
       }
     </style>
     <h2>Hello [[prop1]]</h2>
+
+    <iron-pages selected="0" role="main">
+      <game-teams></game-teams>
+    </iron-pages>
   </template>
 
   <script>
