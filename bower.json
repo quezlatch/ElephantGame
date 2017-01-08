@@ -4,8 +4,10 @@
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
-    "app-layout": "polymerelements/app-layout#^0.10.6",
-    "iron-pages": "polymerelements/iron-pages#^1.0.8"
+    "app-layout": "PolymerElements/app-layout#^0.10.6",
+    "iron-pages": "PolymerElements/iron-pages#^1.0.8",
+    "iron-form": "PolymerElements/iron-form#^1.1.4",
+    "paper-input": "PolymerElements/paper-input#^1.1.22"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
