@@ -13,6 +13,10 @@
         </style>
         <h1>Teams</h1>
 
+        <template is="dom-repeat" items="{{teams}}">
+            <div>Team: <span>{{item}}</span></div>
+        </template>
+
         <form is="iron-form" id="form">
             <paper-input id="name" name="name" label="Name"></paper-input>
             <paper-button raised on-click="addTeam">Add team</paper-button>
@@ -24,10 +28,18 @@
           
             Polymer({
                 is: 'game-teams',
+                properties: {
+                    teams: {
+                        value: []
+                    },
+                },
                 addTeam: function (){
-                    alert(this.$.name.value);
+                    var team = this.$.name.value;
+                    if (team != ''){
+                        this.push('teams', team);
+                        this.$.name.value = '';
+                    }
                 }
-
             });
         })();
     </script>
