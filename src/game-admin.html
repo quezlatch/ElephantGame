@@ -4,7 +4,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
-<dom-module id="game-teams">
+<dom-module id="game-admin">
     <template>
         <style>
             :host {
@@ -27,11 +27,11 @@
             'use strict';
           
             Polymer({
-                is: 'game-teams',
+                is: 'game-admin',
                 properties: {
                     teams: {
                         value: []
-                    },
+                    }
                 },
                 addTeam: function (){
                     var team = this.$.name.value;
