@@ -11,6 +11,8 @@
         </style>
         <h1>Teams</h1>
         <iron-signals on-iron-signal-add-team='addTeam'></iron-signals>
+        <iron-signals on-iron-signal-start-game='startGame'></iron-signals>
+        <iron-signals on-iron-signal-stop-game='stopGame'></iron-signals>
 
         <table className='table table-bordered'>
             <thead>
@@ -49,6 +51,10 @@
         (function() {
             'use strict';
           
+        var tick = () => {
+                console.log("tick");
+            }
+
             Polymer({
                 is: 'game-dashboard',
                 properties: {
@@ -60,6 +66,17 @@
                     var team = { name: detail.name, capital: 650};
                     if (team != ''){
                         this.push('teams', team);
+                    }
+                },
+                startGame: function(){
+                    console.log("start game");
+                    this.intervalHandle = setInterval(tick, 1000);
+                },
+                stopGame: function(){
+                    console.log("stop game");
+                    if (this.intervalHandle) {
+                        clearInterval(this.intervalHandle);
+                        this.intervalHandle = null;
                     }
                 }
             });

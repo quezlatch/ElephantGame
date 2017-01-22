@@ -14,6 +14,8 @@
         <form is="iron-form" id="form">
             <paper-input id="name" name="name" label="Name"></paper-input>
             <paper-button raised on-click="addTeam">Add team</paper-button>
+            <paper-button raised on-click="startGame">Start game</paper-button>
+            <paper-button raised on-click="stopGame">Stop game</paper-button>
         </form>
     </template>
     <script>
@@ -28,6 +30,12 @@
                         this.fire('iron-signal', {name: 'add-team', data: {name: team}});
                         this.$.name.value = '';
                     }
+                },
+                startGame: function() {
+                    this.fire('iron-signal', {name: 'start-game', data: null});
+                },
+                stopGame: function() {
+                    this.fire('iron-signal', {name: 'stop-game', data: null});
                 }
             });
         })();
