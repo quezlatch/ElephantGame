@@ -1,7 +1,8 @@
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 
-<dom-module id="game-deskboard">
+<dom-module id="game-dashboard">
     <template>
         <style>
             :host {
@@ -9,6 +10,7 @@
             }
         </style>
         <h1>Teams</h1>
+        <iron-signals on-iron-signal-add-team='addTeam'></iron-signals>
 
         <template is="dom-repeat" items="{{teams}}">
             <div>Team: <span>{{item}}</span></div>
@@ -19,17 +21,16 @@
             'use strict';
           
             Polymer({
-                is: 'game-deskboard',
+                is: 'game-dashboard',
                 properties: {
                     teams: {
                         value: []
                     }
                 },
-                addTeam: function (){
-                    var team = this.$.name.value;
+                addTeam: function (e, detail){
+                    var team = detail.name;
                     if (team != ''){
                         this.push('teams', team);
-                        this.$.name.value = '';
                     }
                 }
             });
