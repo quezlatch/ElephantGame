@@ -12,9 +12,38 @@
         <h1>Teams</h1>
         <iron-signals on-iron-signal-add-team='addTeam'></iron-signals>
 
-        <template is="dom-repeat" items="{{teams}}">
-            <div>Team: <span>{{item}}</span></div>
-        </template>
+        <table className='table table-bordered'>
+            <thead>
+            <tr>
+                <th colSpan="2"></th>
+                <th colSpan="5">Tax</th>
+                <th colSpan="5">Discounts</th>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <th>Capital</th>
+                <th>IT</th>
+                <th>BE</th>
+                <th>NL</th>
+                <th>FR</th>
+                <th>ES</th>
+                <th>IT</th>
+                <th>BE</th>
+                <th>NL</th>
+                <th>FR</th>
+                <th>ES</th>
+            </tr>
+            </thead>
+            <tbody>
+                <template is="dom-repeat" items="{{teams}}">
+                    <tr>
+                        <td><div>{{item.name}}</div></td>
+                        <td><div>{{item.capital}}</div></td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+
     </template>
     <script>
         (function() {
@@ -28,7 +57,7 @@
                     }
                 },
                 addTeam: function (e, detail){
-                    var team = detail.name;
+                    var team = { name: detail.name, capital: 650};
                     if (team != ''){
                         this.push('teams', team);
                     }
