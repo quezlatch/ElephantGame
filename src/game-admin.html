@@ -1,4 +1,3 @@
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-form/iron-form.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -11,31 +10,31 @@
                 display: block;
             }
         </style>
-        <form is="iron-form" id="form">
-            <paper-input id="name" name="name" label="Name"></paper-input>
-            <paper-button raised on-click="addTeam">Add team</paper-button>
-            <paper-button raised on-click="startGame">Start game</paper-button>
-            <paper-button raised on-click="stopGame">Stop game</paper-button>
-        </form>
-    </template>
-    <script>
-        (function() {
+<form is="iron-form" id="form">
+    <paper-input id="name" name="name" label="Name"></paper-input>
+    <paper-button raised on-click="addTeam">Add team</paper-button>
+    <paper-button raised on-click="startGame">Start game</paper-button>
+    <paper-button raised on-click="stopGame">Stop game</paper-button>
+</form>
+</template>
+<script>
+        (function () {
             'use strict';
-          
+
             Polymer({
                 is: 'game-admin',
-                addTeam: function (){
+                addTeam: function () {
                     var team = this.$.name.value;
-                    if (team != ''){
-                        this.fire('iron-signal', {name: 'add-team', data: {name: team}});
+                    if (team != '') {
+                        this.fire('iron-signal', { name: 'add-team', data: { name: team } });
                         this.$.name.value = '';
                     }
                 },
-                startGame: function() {
-                    this.fire('iron-signal', {name: 'start-game', data: null});
+                startGame: function () {
+                    this.fire('iron-signal', { name: 'start-game', data: null });
                 },
-                stopGame: function() {
-                    this.fire('iron-signal', {name: 'stop-game', data: null});
+                stopGame: function () {
+                    this.fire('iron-signal', { name: 'stop-game', data: null });
                 }
             });
         })();

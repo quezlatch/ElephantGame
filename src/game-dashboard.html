@@ -1,4 +1,3 @@
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
 
@@ -9,59 +8,78 @@
                 display: block;
             }
         </style>
-        <h1>Teams</h1>
-        <iron-signals on-iron-signal-add-team='addTeam'></iron-signals>
-        <iron-signals on-iron-signal-start-game='startGame'></iron-signals>
-        <iron-signals on-iron-signal-stop-game='stopGame'></iron-signals>
+<h1>Teams</h1>
+<iron-signals on-iron-signal-add-team='addTeam'></iron-signals>
+<iron-signals on-iron-signal-start-game='startGame'></iron-signals>
+<iron-signals on-iron-signal-stop-game='stopGame'></iron-signals>
 
-        <table className='table table-bordered'>
-            <thead>
+<table className='table table-bordered'>
+    <thead>
+        <tr>
+            <th colSpan="2"></th>
+            <th colSpan="5">Tax</th>
+            <th colSpan="5">Discounts</th>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <th>Capital</th>
+            <th>IT</th>
+            <th>BE</th>
+            <th>NL</th>
+            <th>FR</th>
+            <th>ES</th>
+            <th>IT</th>
+            <th>BE</th>
+            <th>NL</th>
+            <th>FR</th>
+            <th>ES</th>
+        </tr>
+    </thead>
+    <tbody>
+        <template is="dom-repeat" items="{{teams}}">
             <tr>
-                <th colSpan="2"></th>
-                <th colSpan="5">Tax</th>
-                <th colSpan="5">Discounts</th>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <th>Capital</th>
-                <th>IT</th>
-                <th>BE</th>
-                <th>NL</th>
-                <th>FR</th>
-                <th>ES</th>
-                <th>IT</th>
-                <th>BE</th>
-                <th>NL</th>
-                <th>FR</th>
-                <th>ES</th>
-            </tr>
-            </thead>
-            <tbody>
-                <template is="dom-repeat" items="{{teams}}">
-                    <tr>
-                        <td><div>{{item.name}}</div></td>
-                        <td><div>{{item.capital}}</div></td>
-                    </tr>
+                <td>
+                    <div>{{item.name}}</div>
+                </td>
+                <td>
+                    <div>{{item.capital}}</div>
+                </td>
+                <template is="dom-repeat" items="{{item.tax}}">
+                    <td>
+                        <div>{{item}}</div>
+                    </td>
                 </template>
-            </tbody>
-        </table>
+                <template is="dom-repeat" items="{{item.discounts}}">
+                    <td>
+                        <div>{{item}}</div>
+                    </td>
+                </template>
+            </tr>
+        </template>
+    </tbody>
+</table>
 
-    </template>
-    <script>
-        (function() {
+</template>
+<script>
+        (function () {
             'use strict';
-          
+
+            const countries = ['it', 'be', 'nl', 'fr', 'es'];
             const overhead = 25;
             const bustLimit = 0;
             const tickInterval = 1000;
             const initialCapital = 650;
 
+            var add = (a, b) => a + b;
+
             function reduceCapital(self) {
                 console.log("reduceCapital");
                 self.teams
-                    .map(team => Math.max(team.capital - overhead, bustLimit))
+                    .map(team => Math.max(team.capital - overhead + team.tax.reduce(add) + team.discounts.reduce(add), bustLimit))
                     .forEach((newCapital, i) => self.set("teams." + i + ".capital", newCapital));
             }
+
+            const initialValues = countries.map(() => 0);
 
             Polymer({
                 is: 'game-dashboard',
@@ -70,20 +88,25 @@
                         value: []
                     }
                 },
-                addTeam: function (e, detail){
-                    const team = { name: detail.name, capital: initialCapital};
-                    if (team != ''){
+                addTeam: function (e, detail) {
+                    const team = {
+                        name: detail.name,
+                        capital: initialCapital,
+                        tax: initialValues,
+                        discounts: initialValues
+                    };
+                    if (team != '') {
                         this.push('teams', team);
                     }
                 },
-                startGame: function(){
+                startGame: function () {
                     console.log("start game");
                     const self = this;
-                    this.intervalHandle = setInterval(function(){
+                    this.intervalHandle = setInterval(function () {
                         reduceCapital(self);
                     }, tickInterval);
                 },
-                stopGame: function(){
+                stopGame: function () {
                     console.log("stop game");
                     if (this.intervalHandle) {
                         clearInterval(this.intervalHandle);
