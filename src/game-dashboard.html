@@ -51,8 +51,16 @@
         (function() {
             'use strict';
           
-        var tick = () => {
-                console.log("tick");
+            const overhead = 25;
+            const bustLimit = 0;
+            const tickInterval = 1000;
+            const initialCapital = 650;
+
+            function reduceCapital(self) {
+                console.log("reduceCapital");
+                self.teams
+                    .map(team => Math.max(team.capital - overhead, bustLimit))
+                    .forEach((newCapital, i) => self.set("teams." + i + ".capital", newCapital));
             }
 
             Polymer({
@@ -63,14 +71,17 @@
                     }
                 },
                 addTeam: function (e, detail){
-                    var team = { name: detail.name, capital: 650};
+                    const team = { name: detail.name, capital: initialCapital};
                     if (team != ''){
                         this.push('teams', team);
                     }
                 },
                 startGame: function(){
                     console.log("start game");
-                    this.intervalHandle = setInterval(tick, 1000);
+                    const self = this;
+                    this.intervalHandle = setInterval(function(){
+                        reduceCapital(self);
+                    }, tickInterval);
                 },
                 stopGame: function(){
                     console.log("stop game");
