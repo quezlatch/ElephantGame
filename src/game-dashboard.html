@@ -1,0 +1,38 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="game-deskboard">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <h1>Teams</h1>
+
+        <template is="dom-repeat" items="{{teams}}">
+            <div>Team: <span>{{item}}</span></div>
+        </template>
+    </template>
+    <script>
+        (function() {
+            'use strict';
+          
+            Polymer({
+                is: 'game-deskboard',
+                properties: {
+                    teams: {
+                        value: []
+                    }
+                },
+                addTeam: function (){
+                    var team = this.$.name.value;
+                    if (team != ''){
+                        this.push('teams', team);
+                        this.$.name.value = '';
+                    }
+                }
+            });
+        })();
+    </script>
+</dom-module>
