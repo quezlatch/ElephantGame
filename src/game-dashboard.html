@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="game-feature.html">
 
 <dom-module id="game-dashboard">
     <template>
@@ -36,7 +37,7 @@
         </tr>
     </thead>
     <tbody>
-        <template is="dom-repeat" items="{{teams}}">
+        <template is="dom-repeat" items="{{teams}}" index-as="team_idx">
             <tr>
                 <td>
                     <div>{{item.name}}</div>
@@ -44,16 +45,18 @@
                 <td>
                     <div>{{item.capital}}</div>
                 </td>
-                <template is="dom-repeat" items="{{item.tax}}">
+                <template is="dom-repeat" items="{{item.tax}}" index-as="country_idx">
                     <td>
-                        <div>{{item}}</div>
+                        <div on-tap="hasTaxFeature" data-team-index="{{team_idx}}" data-country-index="{{country_idx}}" data-type="tax">{{item}}</div>
                     </td>
                 </template>
-                <template is="dom-repeat" items="{{item.discounts}}">
+<!--
+                <template is="dom-repeat" items="{{item.discounts}}" index-as="country_idx">
                     <td>
-                        <div>{{item}}</div>
+                        <div on-tap="bink" data-team-index="{{team_idx}}" data-country-index="{{country_idx}}" data-type="discounts">{{item}}</div>
                     </td>
                 </template>
+-->
             </tr>
         </template>
     </tbody>
@@ -61,59 +64,73 @@
 
 </template>
 <script>
-        (function () {
-            'use strict';
+    (function () {
+        'use strict';
 
-            const countries = ['it', 'be', 'nl', 'fr', 'es'];
-            const overhead = 25;
-            const bustLimit = 0;
-            const tickInterval = 1000;
-            const initialCapital = 650;
+        const countries = ['it', 'be', 'nl', 'fr', 'es'];
+        const overhead = 25;
+        const bustLimit = 0;
+        const tickInterval = 1000;
+        const initialCapital = 650;
 
-            var add = (a, b) => a + b;
+        function reduceCapital(self) {
+            console.log("reduceCapital");
+            const add = (a, b) => a + b;
+            self.teams
+                .map(team => Math.max(team.capital - overhead + team.tax.reduce(add) + team.discounts.reduce(add), bustLimit))
+                .forEach((newCapital, i) => self.set("teams." + i + ".capital", newCapital));
+        }
 
-            function reduceCapital(self) {
-                console.log("reduceCapital");
-                self.teams
-                    .map(team => Math.max(team.capital - overhead + team.tax.reduce(add) + team.discounts.reduce(add), bustLimit))
-                    .forEach((newCapital, i) => self.set("teams." + i + ".capital", newCapital));
+        const initialValues = countries.map(() => 0);
+
+        Polymer({
+            is: 'game-dashboard',
+            properties: {
+                teams: {
+                    value: []
+                }
+            },
+            addTeam: function (e, detail) {
+                const team = {
+                    name: detail.name,
+                    capital: initialCapital,
+                    tax: initialValues,
+                    discounts: initialValues
+                };
+                if (team != '') {
+                    this.push('teams', team);
+                }
+            },
+            startGame: function () {
+                console.log("start game");
+                const self = this;
+                this.intervalHandle = setInterval(function () {
+                    reduceCapital(self);
+                }, tickInterval);
+            },
+            stopGame: function () {
+                console.log("stop game");
+                if (this.intervalHandle) {
+                    clearInterval(this.intervalHandle);
+                    this.intervalHandle = null;
+                }
+            },
+            hasTaxFeature: function (e) {
+                const teamIdx = e.target.dataTeamIndex;
+                const countryIdx = e.target.dataCountryIndex;
+                const tax = this.teams[teamIdx].tax;
+
+                //if (tax[countryIdx] > 0) return;
+
+                const deriveFeatureValue = (acc, v) => v > 0 ? acc - 5 : acc;
+
+                const featureValue = tax.reduce(deriveFeatureValue, 100);
+                const path = `teams.${teamIdx}.tax.${countryIdx}`;
+                this.set(path, featureValue);
             }
 
-            const initialValues = countries.map(() => 0);
 
-            Polymer({
-                is: 'game-dashboard',
-                properties: {
-                    teams: {
-                        value: []
-                    }
-                },
-                addTeam: function (e, detail) {
-                    const team = {
-                        name: detail.name,
-                        capital: initialCapital,
-                        tax: initialValues,
-                        discounts: initialValues
-                    };
-                    if (team != '') {
-                        this.push('teams', team);
-                    }
-                },
-                startGame: function () {
-                    console.log("start game");
-                    const self = this;
-                    this.intervalHandle = setInterval(function () {
-                        reduceCapital(self);
-                    }, tickInterval);
-                },
-                stopGame: function () {
-                    console.log("stop game");
-                    if (this.intervalHandle) {
-                        clearInterval(this.intervalHandle);
-                        this.intervalHandle = null;
-                    }
-                }
-            });
-        })();
-    </script>
+        });
+    })();
+</script>
 </dom-module>
